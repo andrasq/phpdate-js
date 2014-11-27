@@ -1,6 +1,6 @@
 {
-  "name": "arlib",
-  "version": "0.9.0",
+  "name": "phpdate-js",
+  "version": "0.9.1",
   "description": "php date() work-alike for nodejs",
   "license": "Apache-2.0",
   "repository": {
