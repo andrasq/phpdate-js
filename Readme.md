@@ -20,8 +20,8 @@ implemented.  See php's [date](http://php.net/manual/en/function.date.php) for
 the descriptions.
 
 The conversion is very quick, as fast as the "Ultra fast javascript strftime"
-[ultra-strftime](https://nodejs.org/package/ultra-strftime);
-faster than Date().toString().
+[ultra-strftime](http://npmjs.org/package/ultra-strftime); faster than
+Date() toString() or toISOString().
 
 Had I known about ultra-strftime, it would have been tempting to implement
 phpdate as a format conversion preprocessor.
