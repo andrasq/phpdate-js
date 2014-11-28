@@ -20,17 +20,18 @@ implemented.  See php's [date](http://php.net/manual/en/function.date.php) for
 the descriptions.
 
 The conversion is very quick, as fast as the "Ultra fast javascript strftime"
-(ultra-strftime)[http://nodejs.org/package/ultra-strftime];
+[ultra-strftime](https://nodejs.org/package/ultra-strftime);
 faster than Date().toString().
 
-Had I known about ultra-strftime it would have been tempting to implement
+Had I known about ultra-strftime, it would have been tempting to implement
 phpdate as a format conversion preprocessor.
 
 ### phpdate( format, [timestamp] )
 
-return a formatted date string like PHP's date() does.  Supports all
-conversions other than the ISO-8601 W and o, though timezone and localization
-support is rather limited.  North America timezones should work.
+return a formatted date string like PHP's `date()` does.  The output will be
+adjusted for the local timezone in effect.  Supports all conversions other
+than the ISO-8601 W and o (in progress), though timezone and localization
+support is limited to North America.
 
 Format is the timestamp conversion specifier.  Format control characters are
 replaced with formatted values; other characters are left as-is.  Backslash
