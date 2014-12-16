@@ -60,13 +60,13 @@ module.exports = {
 
     'should format Y-m-d H:i:s.u': function(t) {
         var str = phpdate('Y-m-d H:i:s.u', 315682496123);
-        t.equal('1980-01-02 12:34:56.123000', str);
+        t.equal(str, '1980-01-02 12:34:56.123000');
         t.done();
     },
 
     'should format c': function(t) {
         var str = phpdate('c', 315682496123);
-        t.equal('1980-01-02T12:34:56-05:00', str);
+        t.equal(str, '1980-01-02T12:34:56-05:00');
         t.done();
     },
 

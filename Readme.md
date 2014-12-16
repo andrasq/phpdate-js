@@ -1,7 +1,7 @@
 phpdate-js
 ==========
 
-quick php date() work-alike for nodejs
+fast php date() work-alike for nodejs
 
         var phpdate = require('phpdate-js');
         var gmdate = require('phpdate-js').gmdate;
@@ -12,35 +12,36 @@ quick php date() work-alike for nodejs
         gmdate('Y-m-d H:i:s T', new Date());
         // => "2014-11-27 18:58:02 GMT"
 
-        phpdate('Y-m-d H:i:s', 1234567890000);
-        // => "2009-02-13 18:31:30"
+        phpdate('Y-m-d H:i:s T', 1234567890000);
+        // => "2009-02-13 18:31:30 EDT"
 
-Supports all php 5.5 conversions, except the ISO 8601 W and o are not yet
-implemented.  See php's [date](http://php.net/manual/en/function.date.php) for
-the descriptions.
+Supports all php conversions, including North American timezone names, offsets,
+and daylight savings changes, with the exception of the ISO 8601 formats
+W and o (which are in progress).
+See php's
+[date](http://php.net/manual/en/function.date.php) for the descriptions.
 
-The conversion is very quick, as fast as the "Ultra fast javascript strftime"
-[ultra-strftime](http://npmjs.org/package/ultra-strftime); faster than
-Date() toString() or toISOString().
-
-Had I known about ultra-strftime, it would have been tempting to implement
-phpdate as a format conversion preprocessor.
+The conversion is very quick, about as fast as the fastest date conversion
+npm modules (see [ultra-strftime](http://npmjs.org/package/ultra-strftime)
+and [fast-strftime](http://npmjs.org/package/fast-strftime)); much faster
+than `new Date().toString()` or `toISOString()`.
 
 ### phpdate( format, [timestamp] )
 
 return a formatted date string like PHP's `date()` does.  The output will be
 adjusted for the local timezone in effect.  Supports all conversions other
-than the ISO-8601 W and o (in progress), though timezone and localization
-support is limited to North America.
+than the ISO-8601 W and o (in progress), though timezone support is limited to
+North America.  Localization is as reported by the nodejs runtime (the
+system), inferred from Date.getTimezoneOffset().
 
-Format is the timestamp conversion specifier.  Format control characters are
+`Format` is the timestamp conversion specifier.  Format control characters are
 replaced with formatted values; other characters are left as-is.  Backslash
 escapes the special meaning of a character.  For instance, 'Y-m-d H:i:s'
 formats an ISO 9075 SQL datetime such as '2014-01-02 12:34:56'.  The date
 and time are formatted for the current locale, with timezone and daylight
 savings adjustments applied.
 
-The timestamp is optional.  If omitted, the current date is used.  If
+The `timestamp` is optional.  If omitted, the current date is used.  If
 specified, it can be a Date object or a JavaScript millisecond timestamp
 (milliseconds since the epoch).
 

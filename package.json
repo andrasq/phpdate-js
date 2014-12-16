@@ -1,7 +1,7 @@
 {
   "name": "phpdate-js",
-  "version": "0.9.5",
-  "description": "php date() work-alike for nodejs",
+  "version": "0.9.6",
+  "description": "fast php date() work-alike for nodejs",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -26,6 +26,8 @@
     "conversion",
     "quick",
     "fast",
+    "nodejs",
+    "js",
     "php"
   ],
   "dependencies": {
