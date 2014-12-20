@@ -1,6 +1,6 @@
 {
   "name": "phpdate-js",
-  "version": "0.9.6",
+  "version": "1.0.0",
   "description": "fast php date() work-alike for nodejs",
   "license": "Apache-2.0",
   "repository": {

@@ -103,6 +103,22 @@ module.exports = {
         t.done();
     },
 
+    'should find the iso week for week ending next year': function(t) {
+        // note: new Date() defaults datetime strings to GMT...
+        // but parses and honors "EST" !  getHours() et al return localtime.
+        assert.equal(phpdate('W', new Date('1986-12-30 EST')), '01');
+        assert.equal(phpdate('W', new Date('2002-12-30 EST')), '01');
+        assert.equal(phpdate('W', new Date('2002-12-31 EST')), '01');
+        assert.equal(phpdate('W', new Date('2001-12-31 EST')), '01');
+        t.done();
+    },
+
+    'should find iso week for week starting last year': function(t) {
+        var str = phpdate('W', new Date('1988-01-02 EST'));
+        t.equal(str, '53');
+        t.done();
+    },
+
     'fuzz test phpdate with 10k random timestamps': function(t) {
         fuzztest(t, phpdate, 'date');
     },
@@ -127,8 +143,7 @@ function fuzztest( t, phpdate, phpPhpdateName ) {
         "Z",
         "c",
         "r U",
-// FIXME: W and o not working yet
-//        "W o",
+        "W o z",
     ];
 
     var i, times = [];
@@ -155,14 +170,13 @@ function fuzztest( t, phpdate, phpPhpdateName ) {
                         '';
                     child_process.exec("php -r '" + script + "' < " + tempfile, {maxBuffer: 100 * 1024 * 1024}, function(err, stdout, stderr) {
                         var results = stdout.split("\n");
-//console.log("AR: results.length", results.length, stderr);
                         results.pop();
                         assert.equal(results.length, times.length);
                         var j;
                         for (j=0; j<times.length; j++) {
-                            var php = phpdate(format, times[j]*1000);
-if (php !== results[j]) console.log(format, "::", times[j], phpdate("g G   Y-m-d H:i:s", times[j]*1000), "\nAR\n", php, "\nphp -r\n", results[j]);
-                            assert.equal(php, results[j]);
+                            var str = phpdate(format, times[j]*1000);
+if (str !== results[j]) console.log(format, "::", times[j], phpdate("g G   Y-m-d H:i:s", times[j]*1000), "\nAR\n", str, "\nphp -r\n", results[j]);
+                            assert.equal(str, results[j]);
                             //t.equal(phpdate(format, times[j]*1000), results[j]);
                         }
                         fs.unlink(tempfile);

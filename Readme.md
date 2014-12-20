@@ -16,21 +16,27 @@ fast php date() work-alike for nodejs
         // => "2009-02-13 18:31:30 EDT"
 
 Supports all php conversions, including North American timezone names, offsets,
-and daylight savings changes, with the exception of the ISO 8601 formats
-W and o (which are in progress).
+and daylight savings changes.
 See php's
 [date](http://php.net/manual/en/function.date.php) for the descriptions.
 
-The conversion is very quick, about as fast as the fastest date conversion
+The conversion is very fast, about as fast as the fastest date conversion
 npm modules (see [ultra-strftime](http://npmjs.org/package/ultra-strftime)
 and [fast-strftime](http://npmjs.org/package/fast-strftime)); much faster
 than `new Date().toString()` or `toISOString()`.
 
+## Installation
+
+        npm install phpdate-js
+        npm test phpdate-js
+
+        node node_modules/phpdate-js/benchmark/benchmark-phpdate.js
+
 ### phpdate( format, [timestamp] )
 
 return a formatted date string like PHP's `date()` does.  The output will be
-adjusted for the local timezone in effect.  Supports all conversions other
-than the ISO-8601 W and o (in progress), though timezone support is limited to
+adjusted for the local timezone in effect.  Supports all conversions, though
+timezone support is limited to
 North America.  Localization is as reported by the nodejs runtime (the
 system), inferred from Date.getTimezoneOffset().
 
