@@ -148,48 +148,55 @@ function fuzztest( t, phpdate, phpPhpdateName ) {
 
     var i, times = [];
 
-    // pick random dates between 1986 (500m) and 2017 (1500m)
-    for (i=0; i<timestampCount; i++) times.push(Math.floor(Math.random() * 1000000000 + 500000000));
+    child_process.exec("php -v", function(err) {
+        if (err) {
+            console.log("fuzz test:", err.message);
+            return t.done();
+        }
 
-    var doneCount = 0;
-    for (i in formats) {
-        (function(format, i) {
-            tempnam("/tmp", "nodeunit-", function(err, tempfile) {
-                if (err) throw err;
-                fs.writeFileSync(tempfile, times.join("\n") + "\n");
-                try {
-                    var script =
-                        'ini_set("date.timezone", "US/Eastern");' +
-                        '$nlines = 0;' +
-                        'while ($timestamp = fgets(STDIN)) {' +
-                        '    $nlines += 1;' +
-                        '    echo ' + phpPhpdateName + '("' + format + '\\n", trim($timestamp));' +
-                        '}' +
-                        'file_put_contents("/tmp/ar.out", "AR: nlines = $nlines\n");' +
-                        '//sleep(10);' +
-                        '';
-                    child_process.exec("php -r '" + script + "' < " + tempfile, {maxBuffer: 100 * 1024 * 1024}, function(err, stdout, stderr) {
-                        var results = stdout.split("\n");
-                        results.pop();
-                        assert.equal(results.length, times.length);
-                        var j;
-                        for (j=0; j<times.length; j++) {
-                            var str = phpdate(format, times[j]*1000);
+        // pick random dates between 1986 (500m) and 2017 (1500m)
+        for (i=0; i<timestampCount; i++) times.push(Math.floor(Math.random() * 1000000000 + 500000000));
+
+        var doneCount = 0;
+        for (i in formats) {
+            (function(format, i) {
+                tempnam("/tmp", "nodeunit-", function(err, tempfile) {
+                    if (err) throw err;
+                    fs.writeFileSync(tempfile, times.join("\n") + "\n");
+                    try {
+                        var script =
+                            'ini_set("date.timezone", "US/Eastern");' +
+                            '$nlines = 0;' +
+                            'while ($timestamp = fgets(STDIN)) {' +
+                            '    $nlines += 1;' +
+                            '    echo ' + phpPhpdateName + '("' + format + '\\n", trim($timestamp));' +
+                            '}' +
+                            'file_put_contents("/tmp/ar.out", "AR: nlines = $nlines\n");' +
+                            '//sleep(10);' +
+                            '';
+                        child_process.exec("php -r '" + script + "' < " + tempfile, {maxBuffer: 100 * 1024 * 1024}, function(err, stdout, stderr) {
+                            var results = stdout.split("\n");
+                            results.pop();
+                            assert.equal(results.length, times.length);
+                            var j;
+                            for (j=0; j<times.length; j++) {
+                                var str = phpdate(format, times[j]*1000);
 if (str !== results[j]) console.log(format, "::", times[j], phpdate("g G   Y-m-d H:i:s", times[j]*1000), "\nAR\n", str, "\nphp -r\n", results[j]);
-                            assert.equal(str, results[j]);
-                            //t.equal(phpdate(format, times[j]*1000), results[j]);
-                        }
-                        fs.unlink(tempfile);
+                                assert.equal(str, results[j]);
+                                //t.equal(phpdate(format, times[j]*1000), results[j]);
+                            }
+                            fs.unlink(tempfile);
+                            doneCount += 1;
+                            if (doneCount === formats.length) t.done();
+                        });
+                    }
+                    catch (err) {
+                        t.ok(false, "php not installed, cannot fuzz test");
                         doneCount += 1;
                         if (doneCount === formats.length) t.done();
-                    });
-                }
-                catch (err) {
-                    t.ok(false, "php not installed, cannot fuzz test");
-                    doneCount += 1;
-                    if (doneCount === formats.length) t.done();
-                }
-            });
-        })(formats[i], i);
-    }
+                    }
+                });
+            })(formats[i], i);
+        }
+    });
 }

@@ -13,7 +13,7 @@ fast php date() work-alike for nodejs
         // => "2014-11-27 18:58:02 GMT"
 
         phpdate('Y-m-d H:i:s T', 1234567890000);
-        // => "2009-02-13 18:31:30 EDT"
+        // => "2009-02-13 18:31:30 EST"
 
 Supports all php conversions, including North American timezone names, offsets,
 and daylight savings changes.
