@@ -1,9 +1,13 @@
 var fs = require('fs');
 var tempnam = require('tempnam');
 var child_process = require('child_process');
+var assert = require('assert');
+
+// the tests expect US/Eastern localtime
+process.env.TZ = "America/New_York";
+
 var phpdate = require('../index');
 var gmdate = phpdate.gmdate;
-var assert = require('assert');
 
 module.exports = {
     setUp: function(done) {
@@ -120,10 +124,12 @@ module.exports = {
     },
 
     'fuzz test phpdate with 10k random timestamps': function(t) {
+        //if (process.env.NODE_COVERAGE) return t.done();
         fuzztest(t, phpdate, 'date');
     },
 
     'fuzz test gmdate with 10k random timestamps': function(t) {
+        //if (process.env.NODE_COVERAGE) return t.done();
         fuzztest(t, gmdate, 'gmdate');
     },
 
