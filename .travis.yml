@@ -7,7 +7,7 @@ node_js:
   - 7
 before_install:
   - npm install -g qnit
-  - apt-get install php5-cli
+  - sudo apt-get install php5-cli
 after_success:
   - npm install -g nyc
   - npm install -g coveralls
