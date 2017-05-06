@@ -4,7 +4,8 @@ var child_process = require('child_process');
 var assert = require('assert');
 
 // the tests expect US/Eastern localtime
-process.env.TZ = "America/New_York";
+// US/Eastern is known on Debian, but not on Mac
+process.env.TZ = "US/Eastern";
 
 var phpdate = require('../index');
 var gmdate = phpdate.gmdate;
@@ -124,12 +125,10 @@ module.exports = {
     },
 
     'fuzz test phpdate with 10k random timestamps': function(t) {
-        //if (process.env.NODE_COVERAGE) return t.done();
         fuzztest(t, phpdate, 'date');
     },
 
     'fuzz test gmdate with 10k random timestamps': function(t) {
-        //if (process.env.NODE_COVERAGE) return t.done();
         fuzztest(t, gmdate, 'gmdate');
     },
 
@@ -187,6 +186,10 @@ function fuzztest( t, phpdate, phpPhpdateName ) {
                             var j;
                             for (j=0; j<times.length; j++) {
                                 var str = phpdate(format, times[j]*1000);
+                                // hack: some php5-cli do not use the timezone name set with init_set(date.timezone),
+                                // but rather convert it to "America/New_York".  Fix that to not break the comparison.
+                                var result = results[j];
+                                if (result.indexOf('America/New_York') >= 0) result = results.replace('America/New_York', 'US/Eastern');
 if (str !== results[j]) console.log(format, "::", times[j], phpdate("g G   Y-m-d H:i:s", times[j]*1000), "\nAR\n", str, "\nphp -r\n", results[j]);
                                 assert.equal(str, results[j]);
                                 //t.equal(phpdate(format, times[j]*1000), results[j]);
