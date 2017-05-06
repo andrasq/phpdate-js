@@ -1,5 +1,5 @@
 var fs = require('fs');
-var tempnam = require('arlib/tempnam');
+var tempnam = require('tempnam');
 var child_process = require('child_process');
 var phpdate = require('../index');
 var gmdate = phpdate.gmdate;

@@ -1,6 +1,6 @@
 {
   "name": "phpdate-js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "fast php date() work-alike for nodejs",
   "license": "Apache-2.0",
   "repository": {
@@ -16,7 +16,10 @@
     "node": "*"
   },
   "scripts": {
-    "test": "nodeunit"
+    "test": "qnit -t 20000 test*",
+    "coverage": "nyc --reporter text --reporter lcov npm run test*",
+    "clean": "rm -rf .nyc_output coverage",
+    "coveralls": "nyc --reporter text-lcov --include lib npm run test | coveralls"
   },
   "keywords": [
     "Andras",
@@ -33,7 +36,6 @@
   "dependencies": {
   },
   "devDependencies": {
-    "nodeunit": "0.9.0",
-    "arlib":"0.1"
+    "tempnam": "1.1.0"
   }
 }
