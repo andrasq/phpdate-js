@@ -29,6 +29,28 @@ npm modules (see [ultra-strftime](http://npmjs.org/package/ultra-strftime)
 and [fast-strftime](http://npmjs.org/package/fast-strftime)); much faster
 than `new Date().toString()` or `toISOString()`.
 
+
+## Benchmark
+
+$ node-v6.7.0 benchmark/benchmark.js
+
+    ---- format different dates
+    qtimeit=0.18.0 node=6.7.0 v8=5.1.281.83 platform=linux kernel=3.16.0-4-amd64 up_threshold=11
+    arch=ia32 mhz=4416 cpuCount=8 cpu="Intel(R) Core(TM) i7-6700K CPU @ 4.00GHz"
+    name  speed  (stats)  rate
+    fast-strftime 1.1.1      2,099,978 ops/sec (17 runs of 50 calls in 4.048 out of 4.324 sec, +/- 0.00%)    1000 >>>>>
+    ultra-strftime 1.0.2     2,505,634 ops/sec (20 runs of 50 calls in 3.991 out of 4.116 sec, +/- 0.00%)    1193 >>>>>>
+    phpdate-js 1.0.3         6,031,994 ops/sec (24 runs of 100 calls in 3.979 out of 4.060 sec, +/- 0.00%)   2872 >>>>>>>>>>>>>>
+
+    ---- format same date
+    qtimeit=0.18.0 node=6.7.0 v8=5.1.281.83 platform=linux kernel=3.16.0-4-amd64 up_threshold=11
+    arch=ia32 mhz=4417 cpuCount=8 cpu="Intel(R) Core(TM) i7-6700K CPU @ 4.00GHz"
+    name  speed  (stats)  rate
+    fast-strftime cached      3,870,123 ops/sec (31 runs of 50 calls in 4.005 out of 4.116 sec, +/- 0.00%)    1000 >>>>>
+    ultra-strftime cached    48,313,751 ops/sec (39 runs of 500 calls in 4.036 out of 4.061 sec, +/- 0.00%)  12484 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    phpdate-js cached        48,524,098 ops/sec (39 runs of 500 calls in 4.019 out of 4.043 sec, +/- 0.00%)  12538 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
 ### phpdate( format, [timestamp] )
 
 return a formatted date string like PHP's `date()` does.  The output will be
