@@ -19,8 +19,8 @@ nodejs, supporting all php conversions.
         phpdate('Y-m-d H:i:s T', 1234567890000);
         // => "2009-02-13 18:31:30 EST"
 
-Supports all php conversions, including North American timezone names, offsets,
-and daylight savings changes.
+Supports timezone offsets, and daylight savings changes, but only North American
+timezone names (those it derives from the timezone offset).
 See php's
 [date](http://php.net/manual/en/function.date.php) for the descriptions.
 
@@ -28,13 +28,6 @@ The conversion is very fast, about as fast as the fastest date conversion
 npm modules (see [ultra-strftime](http://npmjs.org/package/ultra-strftime)
 and [fast-strftime](http://npmjs.org/package/fast-strftime)); much faster
 than `new Date().toString()` or `toISOString()`.
-
-## Installation
-
-        npm install phpdate-js
-        npm test phpdate-js
-
-        node node_modules/phpdate-js/benchmark/benchmark-phpdate.js
 
 ### phpdate( format, [timestamp] )
 
@@ -66,6 +59,14 @@ or daylight saving adjustments.
         var gmdate = require('phpdate-js').gmdate;
         var now = gmdate('Y-m-d H:i:s T');
         // => "2014-11-27 19:17:50 GMT"
+
+Related Work
+------------
+
+- `fast-strftime`
+- `ultra-strftime`
+- `phpdate`
+
 
 Notes
 -----
