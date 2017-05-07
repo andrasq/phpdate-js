@@ -306,12 +306,10 @@ function fuzztest( t, phpdate, phpPhpdateName ) {
                             var j;
                             for (j=0; j<times.length; j++) {
                                 var str = phpdate(format, times[j]*1000);
-                                // hack: some php5-cli do not use the timezone name set with init_set(date.timezone),
-                                // but rather convert it to "America/New_York".  Fix that to not break the comparison.
-                                var result = results[j];
-                                if (result.indexOf('America/New_York') >= 0) result = result.replace('America/New_York', 'US/Eastern');
+                                // note: php5-cli reports 'e' is "America/New_York" if env.TZ is "US/Eastern"
+                                // but if set with ini_set("date.timezone", "US/Eastern") 'e' shows as "US/Eastern"
 if (str !== results[j]) console.log(format, "::", times[j], phpdate("g G   Y-m-d H:i:s", times[j]*1000), "\nAR\n", str, "\nphp -r\n", results[j]);
-                                assert.equal(str, result);
+                                assert.equal(str, results[j]);
                                 //t.equal(phpdate(format, times[j]*1000), results[j]);
                             }
                             fs.unlink(tempfile);
