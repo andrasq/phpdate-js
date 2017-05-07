@@ -22,26 +22,112 @@ module.exports = {
         t.done();
     },
 
-    'should pad to 2 places': function(t) {
-        assert.equal(gmdate('m', 1), '01');
+    'should export expected properties': function(t) {
+        assert.ok(typeof phpdate === 'function');
+        assert.ok(typeof phpdate.gmdate === 'function');
+        assert.ok(typeof phpdate.timezoneName === 'string' || phpdate.timezoneName === null);
         t.done();
     },
 
-    'should pad to 3 places': function(t) {
-        assert.equal(gmdate('B', 1), '041');
-        assert.equal(phpdate('B', 1), '041');
+    'should return string': function(t) {
+        assert.equal(typeof phpdate(""), 'string');
         t.done();
     },
 
-    'should pad to 4 places': function(t) {
-        // note that nodejs typesets '123' without a leading zero
-        assert.equal(phpdate('Y', new Date("1/1/123")), '0123');
-        t.done();
+    'options': {
+        // options set static globals, toggle them back on after checking
+        // these tests are mostly for code coverage, since caching is not easily testable
+
+        'should accept options.cacheResults': function(t) {
+            var str = phpdate("Y-m-d", this.timestamp, { cacheResults: false });
+            assert.ok(/[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(str));
+            phpdate("Y-m-d", this.timestamp, { cacheResults: true });
+            t.done();
+        },
+
+        'should accept options.cacheCurrentDate': function(t) {
+            var str = phpdate("Y-m-d", this.timestamp, { cacheCurrentDate: false });
+            assert.ok(/[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(str));
+            phpdate("Y-m-d", this.timestamp, { cacheCurrentDate: true });
+            t.done();
+        },
+
+        'should accept options.cacheTimezone': function(t) {
+            var str = phpdate("Y-m-d", this.timestamp, { cacheTimezone: false });
+            assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(str));
+            phpdate("Y-m-d", this.timestamp, { cacheTimezone: true });
+            t.done();
+        },
+
+        'should guess timezone from offset if exports.timezoneName is not available': function(t) {
+            return t.skip();
+
+            var tzName = phpdate.timezoneName;
+            phpdate.timezoneName = null;
+            var str = phpdate("e", 1000, { cacheTimezone: false, cacheResults: false });
+            phpdate.timezoneName = tzName;
+            var str2 = phpdate("e", 1000, { cacheTimezone: false, cacheResults: false });
+            phpdate("Y", Date.now(), { cacheTimezone: true, cacheResults: true });
+            assert.equal(str, 'US/Eastern');
+            assert.equal(str2, tzName);
+            t.done();
+        },
+
+        'should reuse _currentDate': function(t) {
+            return t.skip();
+
+            // the cached _currentDate expires every millisecond
+            setTimeout(function _retry() {
+                var t1 = Date.now();
+                phpdate("", 0, { cacheResults: false });
+                var str1 = phpdate("Y-m-d");
+                var str2 = phpdate("Y-m-d");
+                var str3 = phpdate("Y-m-d");
+                var str3 = phpdate("Y-m-d");
+                var str3 = phpdate("Y-m-d");
+                var str3 = phpdate("Y-m-d");
+                var t2 = Date.now();
+                if (t1 !== t2) return _retry();
+                phpdate("", 0, { cacheResults: true });
+                phpdate("Y-m-d");
+                phpdate("Y-m-d");
+                t.done();
+            }, 2);
+        },
     },
 
-    'should pad to 6 places': function(t) {
-        assert.equal(phpdate('u', 1), '001000');
-        t.done();
+    'padding': {
+        'should pad to 2 places': function(t) {
+            assert.equal(gmdate('s', 1000), '01');
+            assert.equal(gmdate('s', 10000), '10');
+            t.done();
+        },
+
+        'should pad to 3 places': function(t) {
+            assert.equal(gmdate('B', 1), '041');
+            assert.equal(phpdate('B', 1), '041');
+            assert.equal(phpdate('B', 23.04 * 3600 * 1000), '001');
+            assert.equal(phpdate('B', 23.5 * 3600 * 1000), '020');
+            assert.equal(phpdate('B', 11 * 3600 * 1000), '500');
+            t.done();
+        },
+
+        'should pad to 4 places': function(t) {
+            // note that nodejs typesets '123' without a leading zero
+            assert.equal(phpdate('Y', new Date("1/1/123")), '0123');
+            assert.equal(phpdate('Y', new Date(-62000000000000)), '0005');
+            assert.equal(phpdate('Y', new Date(-61800000000000)), '0011');
+            assert.equal(phpdate('Y', new Date(-58000000000000)), '0132');
+            assert.equal(phpdate('Y', new Date(1.5e12)), '2017');
+            t.done();
+        },
+
+        'should pad to 6 places': function(t) {
+            assert.equal(phpdate('u', 1), '001000');
+            assert.equal(phpdate('u', 10), '010000');
+            assert.equal(phpdate('u', 100), '100000');
+            t.done();
+        },
     },
 
     'should report on timestamp number': function(t) {
@@ -52,14 +138,31 @@ module.exports = {
 
     'should report on current time': function(t) {
         var str = phpdate('Y-m-d');
-        t.equal(str.slice(0, 2), '20');
-        t.equal(str.length, '2014-01-01'.length);
+        t.ok(/^\d{4}-\d{2}-\d{2}$/.test(str));
         t.done();
     },
 
     'should report on timestamp object': function(t) {
         var str = phpdate('Y-m-d', new Date(86400000/2));
         t.equal('1970-01-01', str);
+        t.done();
+    },
+
+    'should report current date': function(t) {
+        (function _retry() {
+            var year1 = new Date().getFullYear();
+            var str = phpdate('Y');
+            var str = phpdate('Y');     // second one for code coverage
+            var year2 = new Date().getFullYear();
+            if (year1 !== year2) return _retry();
+            t.equal(str, String(year1));
+            t.done();
+        })();
+    },
+
+    'should include utf8 chars in format': function(t) {
+        var str = phpdate('Y-m-d \u1234', 315682496123);
+        t.equal(str, '1980-01-02 \u1234');
         t.done();
     },
 
@@ -97,14 +200,16 @@ module.exports = {
     },
 
     'gmdate should handle DST spring foward in black hole': function(t) {
-        //var dt1 = gmdate('Y-m-d H:i:s', 514969199 * 1000);  // 1:59:59am EST, 6:59:59 GMT
-        //var dt2 = gmdate('Y-m-d H:i:s', 514969200 * 1000);  // 3:00:00am EDT, 7:00:00 GMT
+        var dt1 = gmdate('Y-m-d H:i:s', 514969199 * 1000);  // 1:59:59am EST, 6:59:59 GMT
+        var dt2 = gmdate('Y-m-d H:i:s', 514969200 * 1000);  // 3:00:00am EDT, 7:00:00 GMT
+        assert.equal(dt1, "1986-04-27 06:59:59");
+        assert.equal(dt2, "1986-04-27 07:00:00");
         t.done();
     },
 
     'should typeset gmdate for 1295756896': function(t) {
         var dt = gmdate('Z e I O P T', 1295756896000);
-        //assert.equal(dt, '');
+        assert.equal(dt, '0 UTC 0 +0000 +00:00 GMT');
         t.done();
     },
 
@@ -156,7 +261,7 @@ function fuzztest( t, phpdate, phpPhpdateName ) {
     child_process.exec("php -v", function(err) {
         if (err) {
             console.log("fuzz test:", err.message);
-            return t.done();
+            return t.done(err);
         }
 
         // pick random dates between 1986 (500m) and 2017 (1500m)
@@ -170,7 +275,7 @@ function fuzztest( t, phpdate, phpPhpdateName ) {
                     fs.writeFileSync(tempfile, times.join("\n") + "\n");
                     try {
                         var script =
-                            'ini_set("date.timezone", "US/Eastern");' +
+                            'ini_set("date.timezone", "' + process.env.TZ + '");' +
                             '$nlines = 0;' +
                             'while ($timestamp = fgets(STDIN)) {' +
                             '    $nlines += 1;' +
@@ -189,9 +294,9 @@ function fuzztest( t, phpdate, phpPhpdateName ) {
                                 // hack: some php5-cli do not use the timezone name set with init_set(date.timezone),
                                 // but rather convert it to "America/New_York".  Fix that to not break the comparison.
                                 var result = results[j];
-                                if (result.indexOf('America/New_York') >= 0) result = results.replace('America/New_York', 'US/Eastern');
+                                if (result.indexOf('America/New_York') >= 0) result = result.replace('America/New_York', 'US/Eastern');
 if (str !== results[j]) console.log(format, "::", times[j], phpdate("g G   Y-m-d H:i:s", times[j]*1000), "\nAR\n", str, "\nphp -r\n", results[j]);
-                                assert.equal(str, results[j]);
+                                assert.equal(str, result);
                                 //t.equal(phpdate(format, times[j]*1000), results[j]);
                             }
                             fs.unlink(tempfile);

@@ -3,6 +3,7 @@
 var f_strftime = require('fast-strftime');
 var u_strftime = require('ultra-strftime');
 var phpdate = require('../');
+//var phpdate2 = require('phpdate');      // 0.1.2 is 30x - 250x slower than phpdate-js 1.0.2
 
 var qtimeit = require('qtimeit');
 
@@ -31,6 +32,10 @@ qtimeit.bench({
     'phpdate-js 1.0.3': function() {
         for (i=0; i<nloops; i++) x = phpdate('Y-m-d H:i:s', dates[i]);
     },
+
+    'gmdate-js 1.0.3': function() {
+        for (i=0; i<nloops; i++) x = phpdate.gmdate('Y-m-d H:i:s', dates[i]);
+    },
 })
 console.log("");
 
@@ -47,6 +52,10 @@ qtimeit.bench({
 
     'phpdate-js cached': function() {
         for (i=0; i<nloops; i++) x = phpdate('Y-m-d H:i:s', dt);
+    },
+
+    'gmdate-js cached': function() {
+        for (i=0; i<nloops; i++) x = phpdate.gmdate('Y-m-d H:i:s', dt);
     },
 })
 
