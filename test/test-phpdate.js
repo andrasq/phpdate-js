@@ -73,6 +73,21 @@ module.exports = {
             t.done();
         },
 
+        'cached _currentDate should advance': function(t) {
+            var str1 = phpdate("i.u");
+            setTimeout(function(){
+            var str2 = phpdate("i.u");
+            setTimeout(function(){
+            var str3 = phpdate("i.u");
+            setTimeout(function(){
+            var str4 = phpdate("i.u");
+            t.assert(str1 != str2);
+            t.assert(str2 != str3);
+            t.assert(str3 != str4);
+            t.done();
+            }, 2); }, 2); }, 2);
+        },
+
         'should reuse _currentDate': function(t) {
             return t.skip();
 
