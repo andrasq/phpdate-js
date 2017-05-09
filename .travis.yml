@@ -10,5 +10,5 @@ before_install:
   - sudo apt-get install php5-cli
 after_success:
   - npm install -g nyc
-  - npm install -g coveralls
-  - npm run coveralls
+  - npm install -g codecov
+  - nyc --reporter lcov npm test && codecov
