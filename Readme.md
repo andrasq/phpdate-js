@@ -82,7 +82,7 @@ or daylight saving adjustments.
         var now = gmdate('Y-m-d H:i:s T');
         // => "2014-11-27 19:17:50 GMT"
 
-### defaults( options )
+### configure( options )
 
 Return a version of the library preconfigured for the given settings.
 The available options are:
@@ -114,5 +114,5 @@ Notes
 Change Log
 ----------
 
-1.1.0 - new: defaults() to customize library defaults, also export as `date()`
+1.1.0 - new: configure() to build custom functions for the given defaults, also export as `.date()`
 1.0.0 - verst version with complete php compatibility
