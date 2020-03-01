@@ -285,7 +285,7 @@ function fuzztest( t, phpdate, phpPhpdateName ) {
         var doneCount = 0;
         for (i in formats) {
             (function(format, i) {
-                tempnam("/tmp", "nodeunit-", function(err, tempfile) {
+                tempnam("/tmp", "phpdate-test-", function(err, tempfile) {
                     if (err) throw err;
                     fs.writeFileSync(tempfile, times.join("\n") + "\n");
                     try {
@@ -312,7 +312,7 @@ if (str !== results[j]) console.log(format, "::", times[j], phpdate("g G   Y-m-d
                                 assert.equal(str, results[j]);
                                 //t.equal(phpdate(format, times[j]*1000), results[j]);
                             }
-                            fs.unlink(tempfile);
+                            fs.unlinkSync(tempfile);
                             doneCount += 1;
                             if (doneCount === formats.length) t.done();
                         });

@@ -1,6 +1,6 @@
 {
   "name": "phpdate-js",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "fast php date() work-alike for nodejs",
   "license": "Apache-2.0",
   "repository": {
@@ -8,33 +8,20 @@
     "url": "git://github.com/andrasq/phpdate-js"
   },
   "main": "index.js",
-  "author": {
-    "name": "Andras",
-    "url": "http://github.com/andrasq"
-  },
-  "engines": {
-    "node": "*"
-  },
+  "author": { "name": "Andras", "url": "http://github.com/andrasq" },
+  "engines": { "node": "*" },
+  "keywords": [ "Andras", "date", "time", "format", "conversion", "quick", "fast", "nodejs", "js", "php" ],
+  "readme": "see Readme.md in the repo",
+
   "scripts": {
     "test": "qnit -t 20000 test*",
     "coverage": "nyc --reporter text --reporter lcov npm run test*",
     "clean": "rm -rf .nyc_output coverage"
   },
-  "keywords": [
-    "Andras",
-    "date",
-    "time",
-    "format",
-    "conversion",
-    "quick",
-    "fast",
-    "nodejs",
-    "js",
-    "php"
-  ],
+
   "dependencies": {
   },
   "devDependencies": {
-    "tempnam": "1.1.0"
+    "tempnam": "1.1.2"
   }
 }

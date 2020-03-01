@@ -82,6 +82,16 @@ or daylight saving adjustments.
         var now = gmdate('Y-m-d H:i:s T');
         // => "2014-11-27 19:17:50 GMT"
 
+### defaults( options )
+
+Return a version of the library preconfigured for the given settings.
+The available options are:
+
+- `cacheResults` retain the last few formatted responses and reuse them if
+        possible.  This can be a huge win if e.g. many identical timestamps
+        are generated back-to-back.  Enabled by default.
+
+
 Related Work
 ------------
 
@@ -99,3 +109,10 @@ Notes
   should be correct in all locales.
 - The e conversion returns a generic timezone name like US/Eastern and not
   a locale-specific one such as America/New_York.
+
+
+Change Log
+----------
+
+1.1.0 - new: defaults() to customize library defaults
+1.0.0 - verst version with complete php compatibility
