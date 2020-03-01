@@ -34,11 +34,11 @@ qtimeit.bench({
         for (i=0; i<nloops; i++) x = u_strftime("%Y-%m-\%d %H-%i-%s", dates[i]);
     },
 
-    'phpdate-js 1.0.3': function() {
+    'phpdate-js 1.1.0': function() {
         for (i=0; i<nloops; i++) x = phpdate('Y-m-d H:i:s', dates[i]);
     },
 
-    'gmdate-js 1.0.3': function() {
+    'gmdate 1.1.0': function() {
         for (i=0; i<nloops; i++) x = phpdate.gmdate('Y-m-d H:i:s', dates[i]);
     },
 })

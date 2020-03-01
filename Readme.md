@@ -2,7 +2,7 @@ phpdate-js
 ==========
 
 [![Build Status](https://api.travis-ci.org/andrasq/phpdate-js.svg?branch=master)](https://travis-ci.org/andrasq/phpdate-js?branch=master)
-[![Coverage Status](https://codecov.io/github/andrasq/phpdate-js/coverage.svg?branch=master)](https://codecov.io/github/andrasq/phpdate-js?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/andrasq/phpdate-js/badge.svg?branch=master)](https://coveralls.io/github/andrasq/phpdate-js?branch=master)
 
 Extremely fast, fully compatible exact php `date()` and `gmdate()` work-alike for
 nodejs, supporting all php conversions.
