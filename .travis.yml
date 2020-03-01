@@ -8,7 +8,7 @@ node_js:
   - 13
 before_install:
   - npm install -g qnit
-  - sudo apt-get install php5-cli
+  - sudo apt-get install php-cli
 after_success:
   - if [ `node -p 'process.version.slice(0, 3)'` != "v8." ]; then exit; fi
   - npm install -g nyc coveralls
