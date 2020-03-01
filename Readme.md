@@ -114,5 +114,5 @@ Notes
 Change Log
 ----------
 
-1.1.0 - new: configure() to build custom functions for the given defaults, also export as `.date()`
-1.0.0 - verst version with complete php compatibility
+- 1.1.0 - new: configure() to build custom functions for the given defaults, also export as `.date()`
+- 1.0.0 - verst version with complete php compatibility
