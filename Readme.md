@@ -114,5 +114,5 @@ Notes
 Change Log
 ----------
 
-1.1.0 - new: defaults() to customize library defaults
+1.1.0 - new: defaults() to customize library defaults, also export as `date()`
 1.0.0 - verst version with complete php compatibility
