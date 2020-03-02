@@ -85,6 +85,9 @@ or daylight saving adjustments.
 ### configure( options )
 
 Return a version of the library preconfigured for the given settings.
+The settings apply only to the library returned by configure(), not to
+other configured versions or the default library loaded by `require`.
+
 The available options are:
 
 - `cacheResults` retain the last few formatted responses and reuse them if
